@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#test12345
+#test123456
 
 import vk_api.vk_api
 import add_table
