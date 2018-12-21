@@ -11,10 +11,10 @@ class table(object):
 
 class table_list(list):
     ListOfTable = []
+    data_base_of_table = sqlite3.connect("test_data_base.db")
+    cursor_table = data_base_of_table.cursor()
     def LoadTable(self):
-        data_base_of_table = sqlite3.connect("test_data_base.db")
-        cursor_table = data_base_of_table.cursor()
-        for i in cursor_table.execute("""select * from new_table"""):
+        for i in self.cursor_table.execute("""select * from new_table"""):
             self.ListOfTable.append(table(i[0], i[1], i[2], i[3], i[4]))
     def FreeTable(self):
         return len(self.ListOfTable)
@@ -28,3 +28,14 @@ class table_list(list):
                 new_tabe = 'Номер стола: ' + str(i.number) + '\nКол-во персон: ' + str(i.person) + '\nО столике: ' + i.about   
             l += 1 
         return new_tabe
+    def Table_is_free(self, id1):
+        for i in self.ListOfTable:
+            if i.number == id1:
+                if i.checker == 0:
+                    return 0
+                else:
+                    i.checker = 0
+                    self.cursor_table.execute("""update new_table set checker = 0 where number = """ + str(i.number))   
+                    self.data_base_of_table.commit()                 
+                    return 1
+

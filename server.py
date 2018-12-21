@@ -24,10 +24,18 @@ class Server:
         test_list.LoadTable()
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                for i in range(test_list.FreeTable()):
-                    s = test_list.AboutTable(i, 2)
-                    if s != 'about':
-                        self.send_msg(event.user_id, test_list.AboutTable(i, 2))
+                if event.text == 'Столы':
+                    for i in range(test_list.FreeTable()):
+                        s = test_list.AboutTable(i, 2)
+                        if s != 'about':
+                            self.send_msg(event.user_id, test_list.AboutTable(i, 2))
+                elif int(event.text) >= 1 and int(event.text) <= 5:
+                    num_of_table = int(event.text)
+                    if test_list.Table_is_free(num_of_table) == 1:
+                        self.send_msg(event.user_id, 'Стол забронирован')
+                    else:
+                        self.send_msg(event.user_id, 'Стол занят')
+
 
     def test(self):
         self.send_msg(340883758, "Ку пацаны")
