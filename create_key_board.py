@@ -28,5 +28,3 @@ def new_key_board(labels_for_keyboard):
     keyboard = str(keyboard.decode('utf-8'))
 
     return keyboard
-
-print(new_key_board([['1', '2', '3'], ['4', '5', '6'], ['7', '8', '10']]))
