@@ -22,11 +22,9 @@ class table_list(list):
         return self.ListOfTable[id].photo
     def AboutTable(self, id1, cnt_persons):
         new_tabe = 'about'
-        l = 1
         for i in self.ListOfTable:
-            if i.number == id1 + 1 and i.checker == 1:
+            if i.number == id1 + 1 and i.checker == 1 and cnt_persons == i.person:
                 new_tabe = 'Номер стола: ' + str(i.number) + '\nКол-во персон: ' + str(i.person) + '\nО столике: ' + i.about   
-            l += 1 
         return new_tabe
     def Table_is_free(self, id1):
         for i in self.ListOfTable:

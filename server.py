@@ -32,7 +32,7 @@ class Server:
                     for i in range(test_list.FreeTable()):
                         s = test_list.AboutTable(i, 2)
                         if s != 'about':
-                            self.send_msg(event.user_id, test_list.AboutTable(i, 2))
+                            self.send_msg(event.user_id, s)
                 elif event.text >= '1' and event.text <= '5':
                     num_of_table = int(event.text)
                     if test_list.Table_is_free(num_of_table) == 1:
