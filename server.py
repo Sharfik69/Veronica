@@ -4,6 +4,7 @@
 
 import vk_api.vk_api
 import add_table
+import random
 
 from vk_api import VkUpload
 from collections import defaultdict
@@ -18,6 +19,7 @@ class Server:
     def send_msg(self, send_id, message):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
+                                  random_id = random.randint(1, 1000000000),
                                   keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
 
@@ -31,7 +33,7 @@ class Server:
                         s = test_list.AboutTable(i, 2)
                         if s != 'about':
                             self.send_msg(event.user_id, test_list.AboutTable(i, 2))
-                elif int(event.text) >= 1 and int(event.text) <= 5:
+                elif event.text >= '1' and event.text <= '5':
                     num_of_table = int(event.text)
                     if test_list.Table_is_free(num_of_table) == 1:
                         self.send_msg(event.user_id, 'Стол забронирован')
