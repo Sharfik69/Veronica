@@ -19,10 +19,15 @@ class Server:
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message)
 
-    def start(self, some_text):
+    def start(self):
+        test_list = add_table.table_list()
+        test_list.LoadTable()
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                self.send_msg(event.user_id, some_text)
+                for i in range(test_list.FreeTable()):
+                    s = test_list.AboutTable(i, 2)
+                    if s != 'about':
+                        self.send_msg(event.user_id, test_list.AboutTable(i, 2))
 
     def test(self):
         self.send_msg(340883758, "Ку пацаны")
