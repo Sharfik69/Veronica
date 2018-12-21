@@ -17,7 +17,9 @@ class Server:
         self.vk_api = self.vk.get_api()
     def send_msg(self, send_id, message):
         self.vk_api.messages.send(peer_id = send_id,
-                                  message = message)
+                                  message = message,
+                                  keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
+                                  )
 
     def start(self):
         test_list = add_table.table_list()

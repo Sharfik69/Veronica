@@ -4,21 +4,21 @@
       [{
         "action": {
           "type": "text",
-          "label": "top anime"
+          "label": "Столы"
         },
         "color": "positive"
       },
         {
           "action": {
             "type": "text",
-            "label": "weather"
+            "label": "3"
           },
           "color": "positive"
         }],
       [{
         "action": {
           "type": "text",
-          "label": "translate"
+          "label": "Sosi pisos"
         },
         "color": "default"
       }]
