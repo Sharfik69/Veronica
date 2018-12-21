@@ -21,7 +21,7 @@ class Server:
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
                                   random_id = random.randint(1, 1000000000),
-                                  keyboard = new_key_board([['1', '2', '3'], ['4', '5', '6'], ['7', '8', '10']])
+                                  keyboard = new_key_board([['Столы'], ['1', '2', '3'], ['4', '5', '6'], ['7', '8', '10']])
                                   #keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
 
