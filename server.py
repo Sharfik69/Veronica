@@ -5,6 +5,7 @@
 import vk_api.vk_api
 import add_table
 import random
+from create_key_board import new_key_board
 
 from vk_api import VkUpload
 from collections import defaultdict
@@ -20,7 +21,8 @@ class Server:
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
                                   random_id = random.randint(1, 1000000000),
-                                  keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
+                                  keyboard = new_key_board([['1', '2', '3'], ['4', '5', '6'], ['7', '8', '10']])
+                                  #keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
 
     def start(self):
