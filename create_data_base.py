@@ -54,10 +54,13 @@ while True:
 
 def create_table_for_orders(name_table):
     cursor.execute("""CREATE TABLE """ + name_table +  """
-                  (table_number int, phone text, state int)
+                  (table_number int, code int, state int, date_time real)
                """)
 
 def add_new_order(name_table):
     table_number = int(input('table_number: '))
-    phone = input('phone: ')
+    code = int(input('phone: '))
     state = int(input('state : '))
+    new_record = [(table_number, code, state, date_time)]
+    cursor.executemany("INSERT INTO " + name_table + " VALUES (?, ?, ?,datetime('now', 'localtime')", new_record)
+    INSERT INTO name_table(data_time) VALUES (datetime('now', 'localtime'))
