@@ -27,6 +27,21 @@ def data_base_commit():
 def free_table():
     cursor.execute("""update new_table set checker = 1""")
 
+
+
+def create_table_for_orders(name_table):
+    cursor.execute("""CREATE TABLE """ + name_table +  """
+                  (table_number int, id_user int, state int, date_time real)
+               """)
+
+def add_new_order(name_table):
+    table_number = int(input('table_number: '))
+    id_user = int(input('id_user: '))
+    state = int(input('state : '))
+    cursor.executemany("INSERT INTO " + name_table + " VALUES (" + str(table_number) + "," + str(id_user) + "," + str(state) + "datetime('now', 'localtime'))")
+
+
+
 while True:
     print('1 - Создать базу данных')
     print('2 - Создать таблицу')
@@ -34,7 +49,9 @@ while True:
     print('4 - Показать таблицу')
     print('5 - Закомитить')
     print('6 - Изменить все столы на свободные')
-    print('7 - Выход')
+    print('7 - Создать таблицу с заказами')
+    print('8 - Добавить запис в таблицу с заказами')
+    print('9 - Выход')
     what_to_do = int(input())
     if what_to_do == 1:
         create_data_base('test_data_base')
@@ -49,18 +66,9 @@ while True:
     if what_to_do == 6:
         free_table()
     if what_to_do == 7:
+        create_table_for_orders('new_table_orders')
+    if what_to_do == 8:
+        add_new_order('new_table_orders')
+    if what_to_do == 9:
         break
 
-
-def create_table_for_orders(name_table):
-    cursor.execute("""CREATE TABLE """ + name_table +  """
-                  (table_number int, code int, state int, date_time real)
-               """)
-
-def add_new_order(name_table):
-    table_number = int(input('table_number: '))
-    code = int(input('phone: '))
-    state = int(input('state : '))
-    new_record = [(table_number, code, state, date_time)]
-    cursor.executemany("INSERT INTO " + name_table + " VALUES (?, ?, ?,datetime('now', 'localtime')", new_record)
-    INSERT INTO name_table(data_time) VALUES (datetime('now', 'localtime'))
