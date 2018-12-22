@@ -17,11 +17,11 @@ class Server:
         self.vk = vk_api.VkApi(token = api_token)
         self.longpoll = VkLongPoll(self.vk)
         self.vk_api = self.vk.get_api()
-    def send_msg(self, send_id, message):
+    def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
                                   random_id = random.randint(1, 1000000000),
-                                  keyboard = new_key_board([['Столы'], ['1', '2', '3'], ['4', '5', '6'], ['7', '8', '10']])
+                                  keyboard = new_key_board(key_board)
                                   #keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
 
@@ -34,14 +34,14 @@ class Server:
                     for i in range(test_list.FreeTable()):
                         s = test_list.AboutTable(i, 2)
                         if s != 'about':
-                            self.send_msg(event.user_id, s)
+                            self.send_msg(event.user_id, s, test_list.List_of_free_table(2))
                 elif event.text >= '1' and event.text <= '5':
                     num_of_table = int(event.text)
                     if test_list.Table_is_free(num_of_table) == 1:
-                        self.send_msg(event.user_id, 'Стол забронирован')
+                        self.send_msg(event.user_id, 'Стол забронирован', [['Ok']])
                     else:
-                        self.send_msg(event.user_id, 'Стол занят')
+                        self.send_msg(event.user_id, 'Стол занят', [['Назад']])
 
 
     def test(self):
-        self.send_msg(340883758, "Ку пацаны")
+        self.send_msg(340883758, "Ку пацаны", [['Сосать']])

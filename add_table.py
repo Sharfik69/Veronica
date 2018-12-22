@@ -36,4 +36,19 @@ class table_list(list):
                     self.cursor_table.execute("""update new_table set checker = 0 where number = """ + str(i.number))   
                     self.data_base_of_table.commit()                 
                     return 1
+    def List_of_free_table(self, cnt_person):
+        new_list_table = []
+        new_table_row = []
+        for i in self.ListOfTable:
+            if i.checker == 1 and cnt_person == i.person:
+                new_table_row.append(str(i.number))
+                if len(new_table_row) == 3:
+                    new_list_table.append(new_table_row)
+                    new_table_row = []
+        if len(new_table_row) != 0:
+            new_list_table.append(new_table_row)
+        new_list_table.append(['Назад'])
+        return new_list_table
+
+
 

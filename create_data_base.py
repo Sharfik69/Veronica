@@ -24,7 +24,8 @@ def show_table(name_table):
         print(i)
 def data_base_commit():
     conn.commit()
-
+def free_table():
+    cursor.execute("""update new_table set checker = 1""")
 
 while True:
     print('1 - Создать базу данных')
@@ -32,7 +33,8 @@ while True:
     print('3 - Добавить запись')
     print('4 - Показать таблицу')
     print('5 - Закомитить')
-    print('6 - Выход')
+    print('6 - Изменить все столы на свободные')
+    print('7 - Выход')
     what_to_do = int(input())
     if what_to_do == 1:
         create_data_base('test_data_base')
@@ -45,5 +47,7 @@ while True:
     if what_to_do == 5:
         data_base_commit()
     if what_to_do == 6:
+        free_table()
+    if what_to_do == 7:
         break
         
