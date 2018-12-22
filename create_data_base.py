@@ -50,4 +50,14 @@ while True:
         free_table()
     if what_to_do == 7:
         break
-        
+
+
+def create_table_for_orders(name_table):
+    cursor.execute("""CREATE TABLE """ + name_table +  """
+                  (table_number int, phone text, state int)
+               """)
+
+def add_new_order(name_table):
+    table_number = int(input('table_number: '))
+    phone = input('phone: ')
+    state = int(input('state : '))
