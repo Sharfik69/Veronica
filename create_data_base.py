@@ -38,7 +38,7 @@ def add_new_order(name_table):
     table_number = int(input('table_number: '))
     id_user = int(input('id_user: '))
     state = int(input('state : '))
-    cursor.executemany("INSERT INTO " + name_table + " VALUES (" + str(table_number) + "," + str(id_user) + "," + str(state) + "datetime('now', 'localtime'))")
+    cursor.execute("INSERT INTO " + name_table + " VALUES (" + str(table_number) + "," + str(id_user) + "," + str(state) + ", datetime('now', 'localtime'))")
 
 
 
