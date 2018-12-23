@@ -20,6 +20,8 @@ class Server:
         self.vk_api = self.vk.get_api()
         self.step = defaultdict(int)
         self.person = 0
+        self.date_z = str()
+        self.time_z = str()
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -98,7 +100,7 @@ class Server:
                         else:
                             test_list.Reservation(user_table)
                             test_list.Add_Order(user_table, event.user_id, 1)
-                            self.send_msg(event.user_id, 'Ваш стол забронирован', [['Спасибо за заказ']])
+                            self.send_msg(event.user_id, 'Выберете дату заказа', test_list.date_list())
                             self.step[event.user_id] = 3
 
                     if event.text == 'Назад':
@@ -113,7 +115,32 @@ class Server:
                         reservration_of_table(4)
                     elif self.person == 5 and event.text.isdigit():
                         reservration_of_table(5)
+                elif self.step[event.user_id] == 3:
+                    if event.text == 'Назад':
+                        self.step[event.user_id] = 1
+                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
+                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
+                    elif event.text == 'Сегодня':
+                        self.date_z = event.text
+                        self.send_msg(event.user_id, 'Выберете время заказа', test_list.time_list(15))
+                        self.step[event.user_id] = 4
+                    else:
+                        self.date_z = event.text
+                        self.send_msg(event.user_id, 'Выберете время заказа', test_list.time_list(30))
+                        self.step[event.user_id] = 4
+                elif self.step[event.user_id] == 4:
+                    if event.text == 'Назад':
+                        self.step[event.user_id] = 1
+                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
+                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
+                    else:
+                        self.step[event.user_id] = 5
+                        self.time_z = event.text
+                        self.send_msg(event.user_id, 'Ваш заказ был добавлен', [['Ok']])
+
+
                     
+
                     
                     
 

@@ -21,6 +21,7 @@ def new_key_board(labels_for_keyboard):
                 new_row.append(get_button(label = j, color = "negative"))
             else:
                 new_row.append(get_button(label = j, color = "primary"))
+                
 
         buttons_row.append(new_row)
             
