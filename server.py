@@ -19,6 +19,7 @@ class Server:
         self.longpoll = VkLongPoll(self.vk)
         self.vk_api = self.vk.get_api()
         self.step = defaultdict(int)
+        self.person = 0
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -29,7 +30,6 @@ class Server:
 
     def start(self):
         test_list = add_table.table_list()
-        test_list.LoadTable()
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 if self.step[event.user_id] == 0:
@@ -37,53 +37,87 @@ class Server:
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
                     self.step[event.user_id] = 1
                 elif self.step[event.user_id] == 1:
+                    
+                    def print_type_table(result):
+                        for i in result:
+                                for j in i:
+                                    if j != 'Назад':
+                                        self.send_msg(event.user_id, test_list.print_about_table(int(j)), [['Одну минуту']])
 
-                    def print_list_table(cnt_person):
-                        check_table = False
-                        for i in range(test_list.FreeTable()):
-                            s = test_list.AboutTable(i, cnt_person)
-                            if s != 'about':
-                                check_table = True
-                                self.send_msg(event.user_id, s, test_list.List_of_free_table(cnt_person))
-                        return check_table
-
-                    if event.text == 'Столик на двоих':
-                        if print_list_table(2) == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты', [['Назад']])
-                        else:
-                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
-                            if event.text == 'да':
-                                self.step[event.user_id] = 2
-                    elif event.text == 'Столик на троих':
-                        if print_list_table(3) == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на троих заняты', [['Назад']])
-                        else:
-                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
-                            if event.text == 'да':
-                                self.step[event.user_id] = 2
-                    elif event.text == 'Столик на четверых':
-                        if print_list_table(4) == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
-                        else:
-                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
-                            if event.text == 'да':
-                                self.step[event.user_id] = 2
-                    elif event.text == 'Столик на большую компанию':
-                        if print_list_table(5) == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на большую компанию заняты', [['Назад']])
-                        else:
-                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
-                            if event.text == 'да':
-                                self.step[event.user_id] = 2
-                    elif event.text == 'Назад':
-                        self.step[event.user_id] = 1
+                    if event.text == 'Назад':
                         self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
 
-                elif self.step[event.user_id] == 2:
-                    self.send_msg(event.user_id, 'Выбранный Вами столик забронирован!',[])
+                    if event.text == 'Столик на двоих':
+                        result = test_list.select_table(2)
+                        if result == False:
+                            self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты', [['Назад']])
+                        else:
+                            print_type_table(result)
+                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.step[event.user_id] = 2
+                            self.person = 2
+                    if event.text == 'Столик на троих':
+                        result = test_list.select_table(3)
+                        if result == False:
+                            self.send_msg(event.user_id, 'На данный момент все столики на троих заняты', [['Назад']])
+                        else:
+                            print_type_table(result)
+                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.step[event.user_id] = 2
+                            self.person = 3
 
+                            
+                    if event.text == 'Столик на четверых':
+                        result = test_list.select_table(4)
+                        if result == False:
+                            self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
+                        else:
+                            print_type_table(result)
+                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.step[event.user_id] = 2
+                            self.person = 4
+                            
+                    if event.text == 'Столик на большую компанию':
+                        result = test_list.select_table(5)
+                        if result == False:
+                            self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
+                        else:
+                            print_type_table(result)
+                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.step[event.user_id] = 2
+                            self.person = 5
+                elif self.step[event.user_id] == 2:
+                    def reservration_of_table(person):
+                        choosen_type = int(event.text)
+                        user_table = test_list.table_for_user(person, choosen_type)
+                        if user_table == None:
+                            self.step[event.user_id] = 1
+                            self.send_msg(event.user_id, 'Столика с таким типом нет, извините', 
+                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
+                        else:
+                            test_list.Reservation(user_table)
+                            test_list.Add_Order(user_table, event.user_id, 1)
+                            self.send_msg(event.user_id, 'Ваш стол забронирован', [['Спасибо за заказ']])
+                            self.step[event.user_id] = 3
+
+                    if event.text == 'Назад':
+                        self.step[event.user_id] = 1
+                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
+                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
+                    elif self.person == 2 and event.text.isdigit():
+                        reservration_of_table(2)
+                    elif self.person == 3 and event.text.isdigit():
+                        reservration_of_table(3)
+                    elif self.person == 4 and event.text.isdigit():
+                        reservration_of_table(4)
+                    elif self.person == 5 and event.text.isdigit():
+                        reservration_of_table(5)
                     
+                    
+                    
+
+
                     
 
 

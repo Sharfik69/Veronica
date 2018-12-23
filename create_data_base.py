@@ -56,6 +56,17 @@ def add_new_order(name_table):
 
 
 while True:
+    #conn = sqlite3.connect("test_data_base.db")
+    #cursor = conn.cursor()
+    #cursor.execute("""update new_table set type = 1 where type = 3 and person = 5""")
+    #cursor.execute("""drop table type_table """)
+    #cursor.execute("""CREATE TABLE type_of_table (type_table int, about text) """) 
+    #cursor.execute("INSERT INTO type_of_table(type_table, about) VALUES (1, 'Norm_stol1')")
+    #cursor.execute("INSERT INTO type_of_table(type_table, about) VALUES (2, 'Norm_stol2')")
+    #cursor.execute("INSERT INTO type_of_table(type_table, about) VALUES (3, 'Norm_stol3')")
+    #conn.commit()
+
+
     print('1 - Создать базу данных')
     print('2 - Создать таблицу')
     print('3 - Добавить запись')
