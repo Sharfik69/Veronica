@@ -8,7 +8,7 @@ class table(object):
         self.photo = photo
         self.about = about
         self.checker = checker
-
+#(number int, person int, photo text, type int, checker int)
 class table_list(list):
     ListOfTable = []
     data_base_of_table = sqlite3.connect("test_data_base.db")

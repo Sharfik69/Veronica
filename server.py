@@ -50,19 +50,40 @@ class Server:
                     if event.text == 'Столик на двоих':
                         if print_list_table(2) == False:
                             self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты', [['Назад']])
+                        else:
+                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
+                            if event.text == 'да':
+                                self.step[event.user_id] = 2
                     elif event.text == 'Столик на троих':
                         if print_list_table(3) == False:
                             self.send_msg(event.user_id, 'На данный момент все столики на троих заняты', [['Назад']])
+                        else:
+                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
+                            if event.text == 'да':
+                                self.step[event.user_id] = 2
                     elif event.text == 'Столик на четверых':
                         if print_list_table(4) == False:
                             self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
+                        else:
+                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
+                            if event.text == 'да':
+                                self.step[event.user_id] = 2
                     elif event.text == 'Столик на большую компанию':
                         if print_list_table(5) == False:
                             self.send_msg(event.user_id, 'На данный момент все столики на большую компанию заняты', [['Назад']])
+                        else:
+                            self.send_msg(event.user_id, 'Желаете забронировать этот столик?', [['да'],['нет']])
+                            if event.text == 'да':
+                                self.step[event.user_id] = 2
                     elif event.text == 'Назад':
                         self.step[event.user_id] = 1
                         self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
+
+                elif self.step[event.user_id] == 2:
+                    self.send_msg(event.user_id, 'Выбранный Вами столик забронирован!',[])
+
+                    
                     
 
 
@@ -86,3 +107,4 @@ class Server:
 
     def test(self):
         self.send_msg(340883758, "Ку пацаны", [['Сосать']])
+# your code goes here
