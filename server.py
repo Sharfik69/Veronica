@@ -22,6 +22,7 @@ class Server:
         self.person = 0
         self.date_z = str()
         self.time_z = str()
+        self.text_now = [[]]
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -29,7 +30,13 @@ class Server:
                                   keyboard = new_key_board(key_board)
                                   #keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
-
+        self.text_now = key_board
+    def check_message(self, event_text):
+        for i in self.text_now:
+            for j in i:
+                if j == event_text:
+                    return True
+        return False
     def start(self):
         test_list = add_table.table_list()
         for event in self.longpoll.listen():
@@ -38,7 +45,7 @@ class Server:
                     self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
                     self.step[event.user_id] = 1
-                elif self.step[event.user_id] == 1:
+                elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
                     
                     def print_type_table(result):
                         for i in result:
@@ -89,7 +96,7 @@ class Server:
                             self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
                             self.step[event.user_id] = 2
                             self.person = 5
-                elif self.step[event.user_id] == 2:
+                elif self.step[event.user_id] == 2 and self.check_message(event.text) == True:
                     def reservration_of_table(person):
                         choosen_type = int(event.text)
                         user_table = test_list.table_for_user(person, choosen_type)
@@ -115,7 +122,7 @@ class Server:
                         reservration_of_table(4)
                     elif self.person == 5 and event.text.isdigit():
                         reservration_of_table(5)
-                elif self.step[event.user_id] == 3:
+                elif self.step[event.user_id] == 3 and self.check_message(event.text) == True:
                     if event.text == 'Назад':
                         self.step[event.user_id] = 1
                         self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
@@ -128,7 +135,7 @@ class Server:
                         self.date_z = event.text
                         self.send_msg(event.user_id, 'Выберете время заказа', test_list.time_list(30))
                         self.step[event.user_id] = 4
-                elif self.step[event.user_id] == 4:
+                elif self.step[event.user_id] == 4 and self.check_message(event.text) == True:
                     if event.text == 'Назад':
                         self.step[event.user_id] = 1
                         self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
