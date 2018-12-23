@@ -97,9 +97,11 @@ class table_list():
         for i in self.cursor_table.execute ("""select time(datetime('now', 'localtime'))"""):
             now_time = str(i[0][:-3])
         for i in time_list_ret:
-            if int(now_time[:-3]) <= int(i[:-3]):
+            if int(now_time[:-3]) == int(i[:-3]):
                 if int(now_time[3:]) < int(i[3:]):
                     time_list_true.append([str(i)])
+            elif int(now_time[:-3]) < int(i[:-3]):
+                time_list_true.append([str(i)])
             if len(time_list_true) == 9:
                 break
         time_list_true.append(['Назад'])
