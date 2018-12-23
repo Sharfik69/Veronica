@@ -1,24 +1,37 @@
 import sqlite3
+import random
 
 def create_data_base(name_data_base):
     global conn
     conn = sqlite3.connect(name_data_base + ".db")
     global cursor
     cursor = conn.cursor()
+    #cursor.execute("""drop table new_table""")
 
 def create_table(name_table):
     cursor.execute("""CREATE TABLE """ + name_table +  """
-                  (number int, person int, photo text, about text, checker int)
+                  (number int, person int, photo text, type int, checker int)
                """) 
 
 def add_new_record(name_table):
+    '''
     number_table = int(input('Number of table: '))
     person = int(input('Person: '))
     photo_link = input('Photo link:')
-    about_table = input('About table: ')
+    type_table = int(input('About table: '))
     checker = int(input('Free: '))
-    new_record = [(number_table, person, photo_link, about_table, checker)]
+    new_record = [(number_table, person, photo_link, type_table, checker)]
     cursor.executemany("INSERT INTO " + name_table + " VALUES (?, ?, ?, ?, ?)", new_record)
+    '''
+    for i in range(100):
+        number_table = i + 1
+        person = random.randint(2, 5)
+        photo_link = 'norm_table'
+        type_table = random.randint(1, 3)
+        checker = 1
+        new_record = [(number_table, person, photo_link, type_table, checker)]
+        cursor.executemany("INSERT INTO " + name_table + " VALUES (?, ?, ?, ?, ?)", new_record)
+
 def show_table(name_table):
     for i in cursor.execute("""select * from """ + name_table):
         print(i)
