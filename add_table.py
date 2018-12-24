@@ -8,6 +8,7 @@ class table(object):
         self.photo = photo
         self.about = about
         self.checker = checker
+        self.today = str()
 #(number int, person int, photo text, type int, checker int)
 class table_list():
     data_base_of_table = sqlite3.connect("test_data_base.db")
@@ -70,6 +71,10 @@ class table_list():
             for i in self.cursor_table.execute ("""select date(datetime('now', 'localtime'), '+"""  + str(dayz) + """ day')"""):
                 if dayz == 0:
                     date_list_return.append(['Сегодня'])
+                    date_r = str(i[0][5:])
+                    date_r = date_r.replace(date_r[0:3], number_to_date[date_r[0:2]])
+                    date_r = date_r[-2:] + date_r[:-2]
+                    self.today = date_r
                 else:
                     date_r = str(i[0][5:])
                     date_r = date_r.replace(date_r[0:3], number_to_date[date_r[0:2]])
@@ -98,16 +103,22 @@ class table_list():
         for i in self.cursor_table.execute ("""select time(datetime('now', 'localtime'))"""):
             now_time = str(i[0][:-3])
         for i in time_list_ret:
-            if int(now_time[:-3]) == int(i[:-3]):
-                if int(now_time[3:]) < int(i[3:]):
+            if checker == 15:
+                if int(now_time[:-3]) == int(i[:-3]):
+                    if int(now_time[3:]) < int(i[3:]):
+                        time_list_true.append([str(i)])
+                elif int(now_time[:-3]) < int(i[:-3]):
                     time_list_true.append([str(i)])
-            elif int(now_time[:-3]) < int(i[:-3]):
+            else:
                 time_list_true.append([str(i)])
             if len(time_list_true) == 9:
                 break
         time_list_true.append(['Назад'])
         return time_list_true
 
+    def today_to_string(self):
+        return self.today
+        
 
     def str_to_numb(self, data_text, time_text):
         date_to_number = {
