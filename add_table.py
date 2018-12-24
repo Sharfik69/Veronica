@@ -37,9 +37,10 @@ class table_list():
             return i[1]
     
 
-    def Add_Order(self, table_number, id_user, state):
-        self.cursor_table.execute("INSERT INTO new_table_orders VALUES (" + str(table_number) + "," + str(id_user) + "," + str(state) + ", datetime('now', 'localtime'))")
-        self.cursor_table.execute("UPDATE new_table_orders SET date_time = DATETIME(date_time, '+30 minutes')")
+    def Add_Order(self, table_number, id_user, state, time_order):
+        order = [(str(table_number), str(id_user), str(state), time_order)] 
+        self.cursor_table.executemany("INSERT INTO new_table_orders VALUES (?, ?, ?, ?)", order)
+        #self.cursor_table.execute("UPDATE new_table_orders SET date_time = DATETIME(date_time, '+30 minutes')")
         self.data_base_of_table.commit() 
     
     def table_for_user(self, person, type_table):
@@ -108,7 +109,27 @@ class table_list():
         return time_list_true
 
 
-                
+    def str_to_numb(self, data_text, time_text):
+        date_to_number = {
+            'Января': '01', 
+            'Февраля': '02', 
+            'Марта': '03', 
+            'Апреля': '04',
+            'Мая': '05', 
+            'Июня': '06', 
+            'Июля': '07', 
+            'Августа': '08', 
+            'Сентября': '09',
+            'Октября': '10',
+            'Ноября': '11', 
+            'Декабря': '12'
+        }
+        return_date_time = '2018-'
+        #2018-12-17 19:00:00
+        data_number = date_to_number[data_text[3:]]
+        return_date_time += data_number + '-' + data_text[:2] + ' ' + time_text + ':00'
+        return return_date_time
+
         
             
 

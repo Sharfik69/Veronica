@@ -23,6 +23,7 @@ class Server:
         self.date_z = str()
         self.time_z = str()
         self.text_now = [[]]
+        self.user_table = 0
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -99,14 +100,13 @@ class Server:
                 elif self.step[event.user_id] == 2 and self.check_message(event.text) == True:
                     def reservration_of_table(person):
                         choosen_type = int(event.text)
-                        user_table = test_list.table_for_user(person, choosen_type)
-                        if user_table == None:
+                        self.user_table = test_list.table_for_user(person, choosen_type)
+                        if self.user_table == None:
                             self.step[event.user_id] = 1
                             self.send_msg(event.user_id, 'Столика с таким типом нет, извините', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
                         else:
-                            test_list.Reservation(user_table)
-                            test_list.Add_Order(user_table, event.user_id, 1)
+                            test_list.Reservation(self.user_table)
                             self.send_msg(event.user_id, 'Выберете дату заказа', test_list.date_list())
                             self.step[event.user_id] = 3
 
@@ -144,6 +144,8 @@ class Server:
                         self.step[event.user_id] = 5
                         self.time_z = event.text
                         self.send_msg(event.user_id, 'Ваш заказ был добавлен', [['Ok']])
+                        print(self.user_table, event.user_id, 1, test_list.str_to_numb(self.date_z, self.time_z))
+                        test_list.Add_Order(self.user_table, event.user_id, 1, test_list.str_to_numb(self.date_z, self.time_z))
 
 
                     
