@@ -160,20 +160,5 @@ class Server:
 
 
 
-                '''
-                if event.text == 'Столы':
-                    for i in range(test_list.FreeTable()):
-                        s = test_list.AboutTable(i, 2)
-                        if s != 'about':
-                            self.send_msg(event.user_id, s, test_list.List_of_free_table(2))
-                elif event.text >= '1' and event.text <= '5':
-                    num_of_table = int(event.text)
-                    if test_list.Table_is_free(num_of_table) == 1:
-                        self.send_msg(event.user_id, 'Стол забронирован', [['Ok']])
-                    else:
-                        self.send_msg(event.user_id, 'Стол занят', [['Назад']])
-                '''
-
-
     def test(self):
         self.send_msg(340883758, "Ку пацаны", [['Сосать']])

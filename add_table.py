@@ -129,11 +129,3 @@ class table_list():
         data_number = date_to_number[data_text[3:]]
         return_date_time += data_number + '-' + data_text[:2] + ' ' + time_text + ':00'
         return return_date_time
-
-        
-            
-
-
-
-
-
