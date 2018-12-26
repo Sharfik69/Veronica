@@ -25,6 +25,7 @@ class Server:
         self.text_now = [[]]
         self.user_table = 0
         self.text_about_table = str()
+        self.about_user = str()
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -62,10 +63,10 @@ class Server:
                     if event.text == 'Столик на двоих':
                         result = test_list.select_table(2)
                         if result == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты', [['Назад']])
+                            self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты, посмотрите столики на троих', [['Назад']])
                         else:
                             print_type_table(result)
-                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.send_msg(event.user_id, 'Имеются следующие виды столов на два человека', result)
                             self.step[event.user_id] = 2
                             self.person = 2
                     if event.text == 'Столик на троих':
@@ -74,7 +75,7 @@ class Server:
                             self.send_msg(event.user_id, 'На данный момент все столики на троих заняты', [['Назад']])
                         else:
                             print_type_table(result)
-                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.send_msg(event.user_id, 'Имеются следующие виды столов на три человека', result)
                             self.step[event.user_id] = 2
                             self.person = 3
 
@@ -85,7 +86,7 @@ class Server:
                             self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
                         else:
                             print_type_table(result)
-                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.send_msg(event.user_id, 'Имеются следующие виды столов на четыре человека', result)
                             self.step[event.user_id] = 2
                             self.person = 4
                             
@@ -95,7 +96,7 @@ class Server:
                             self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
                         else:
                             print_type_table(result)
-                            self.send_msg(event.user_id, 'Выберет тип стола, который вас интересует', result)
+                            self.send_msg(event.user_id, 'Имеются следующие виды столов на большую человека', result)
                             self.step[event.user_id] = 2
                             self.person = 5
                 elif self.step[event.user_id] == 2 and self.check_message(event.text) == True:
@@ -145,10 +146,12 @@ class Server:
                         self.step[event.user_id] = 5
                         self.time_z = event.text
                         self.text_about_table = 'Ваш столик на ' + str(self.person) + ' персоны назначен на ' + str(self.date_z) + ' ' + str(self.time_z)
-                        self.send_msg(event.user_id, self.text_about_table, [['Ok']])
+                        self.send_msg(event.user_id, 'Пожалуйста отправтье ваше имя и номер телефона, мы свяжемся с вами, чтобы подтвердить заказ', [['Ok']])
                         test_list.Add_Order(self.user_table, event.user_id, 1, test_list.str_to_numb(self.date_z, self.time_z))
-                elif self.step[event.user_id] == 5 and self.check_message(event.text) == True:
-                    self.send_msg(event.user_id, self.text_about_table, [['Ok']])
+                elif self.step[event.user_id] == 5:
+                    self.send_msg(event.user_id, 'Спасибо за заказ, мы скоро с вами свяжемся', [['Ok']])
+                    self.about_user = event.text
+                    
 
                     
 
