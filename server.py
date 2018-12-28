@@ -11,9 +11,11 @@ import sqlite3
 from collections import defaultdict
 from create_key_board import new_key_board
 from vk_api import VkUpload
-from collections import defaultdict
+from collections import *
 from vk_api.longpoll import VkLongPoll, VkEventType
 from list_of_ordered_tables import but
+from action_for_user import *
+
 class Server:
     def __init__(self, api_token, server_name: str = "Empty"):
         self.server_name = server_name
@@ -21,13 +23,13 @@ class Server:
         self.longpoll = VkLongPoll(self.vk)
         self.vk_api = self.vk.get_api()
         self.step = defaultdict(int)
-        self.person = 0
-        self.date_z = str()
-        self.time_z = str()
-        self.text_now = [[]]
-        self.user_table = 0
+        self.person = defaultdict(int)
+        self.date_z = defaultdict(str)
+        self.time_z = defaultdict(str)
+        self.text_now = defaultdict(list)
+        self.user_table = defaultdict(int)
+        self.about_user = defaultdict(str)
         self.text_about_table = str()
-        self.about_user = str()
     def send_msg(self, send_id, message, key_board):
         self.vk_api.messages.send(peer_id = send_id,
                                   message = message,
@@ -35,9 +37,9 @@ class Server:
                                   keyboard = new_key_board(key_board)
                                   #keyboard=open("keyboard.json", "r", encoding = "UTF-8").read()
                                   )
-        self.text_now = key_board
-    def check_message(self, event_text):
-        for i in self.text_now:
+        self.text_now[send_id] = key_board
+    def check_message(self, event_text, send_id):
+        for i in self.text_now[send_id]:
             for j in i:
                 if j == event_text:
                     return True
@@ -46,7 +48,7 @@ class Server:
         if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']]) 
                     self.step[event.user_id] = 1
-        elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
+        elif self.step[event.user_id] == 1 and self.check_message(event.text, event.user_id) == True:
             if event.text == 'Поступившие заявки':
                 self.send_msg(event.user_id, 'Этап 2',but())
             elif event.text == 'Одобренные заявки':
@@ -60,117 +62,23 @@ class Server:
     def start(self):
         test_list = add_table.table_list()
         for event in self.longpoll.listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 340883758:
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 340883759:
                 self.start_for_manager(event)
             elif event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
                     self.step[event.user_id] = 1
-                elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
-                    
-                    def print_type_table(result):
-                        for i in result:
-                                for j in i:
-                                    if j != 'Назад':
-                                        self.send_msg(event.user_id, test_list.print_about_table(int(j)), [['Одну минуту']])
-
-                    if event.text == 'Назад':
-                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
-                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
-
-                    if event.text == 'Столик на двоих':
-                        result = test_list.select_table(2)
-                        if result == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на двоих заняты, посмотрите столики на троих', [['Назад']])
-                        else:
-                            print_type_table(result)
-                            self.send_msg(event.user_id, 'Имеются следующие виды столов на два человека', result)
-                            self.step[event.user_id] = 2
-                            self.person = 2
-                    if event.text == 'Столик на троих':
-                        result = test_list.select_table(3)
-                        if result == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на троих заняты', [['Назад']])
-                        else:
-                            print_type_table(result)
-                            self.send_msg(event.user_id, 'Имеются следующие виды столов на три человека', result)
-                            self.step[event.user_id] = 2
-                            self.person = 3
-
-                            
-                    if event.text == 'Столик на четверых':
-                        result = test_list.select_table(4)
-                        if result == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
-                        else:
-                            print_type_table(result)
-                            self.send_msg(event.user_id, 'Имеются следующие виды столов на четыре человека', result)
-                            self.step[event.user_id] = 2
-                            self.person = 4
-                            
-                    if event.text == 'Столик на большую компанию':
-                        result = test_list.select_table(5)
-                        if result == False:
-                            self.send_msg(event.user_id, 'На данный момент все столики на четверых заняты', [['Назад']])
-                        else:
-                            print_type_table(result)
-                            self.send_msg(event.user_id, 'Имеются следующие виды столов на большую человека', result)
-                            self.step[event.user_id] = 2
-                            self.person = 5
-                elif self.step[event.user_id] == 2 and self.check_message(event.text) == True:
-                    def reservration_of_table(person):
-                        choosen_type = int(event.text)
-                        self.user_table = test_list.table_for_user(person, choosen_type)
-                        if self.user_table == None:
-                            self.step[event.user_id] = 1
-                            self.send_msg(event.user_id, 'Столика с таким типом нет, извините', 
-                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
-                        else:
-                            test_list.Reservation(self.user_table)
-                            self.send_msg(event.user_id, 'Вы выбираете столик на ' + str(self.person) + ' человек\nВыберете дату заказа', test_list.date_list())
-                            self.step[event.user_id] = 3
-
-                    if event.text == 'Назад':
-                        self.step[event.user_id] = 1
-                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
-                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
-                    elif self.person == 2 and event.text.isdigit():
-                        reservration_of_table(2)
-                    elif self.person == 3 and event.text.isdigit():
-                        reservration_of_table(3)
-                    elif self.person == 4 and event.text.isdigit():
-                        reservration_of_table(4)
-                    elif self.person == 5 and event.text.isdigit():
-                        reservration_of_table(5)
-                elif self.step[event.user_id] == 3 and self.check_message(event.text) == True:
-                    if event.text == 'Назад':
-                        self.step[event.user_id] = 1
-                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
-                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
-                    elif event.text == 'Сегодня':
-                        self.date_z = test_list.today_to_string()
-                        self.send_msg(event.user_id, 'Вы выбираете столик на ' + str(self.person) + ' человек\nВыберете время заказа', test_list.time_list(15))
-                        self.step[event.user_id] = 4
-                    else:
-                        self.date_z = event.text
-                        self.send_msg(event.user_id, 'Вы выбираете столик на ' + str(self.person) + ' человек\nВыберете время заказа', test_list.time_list(30))
-                        self.step[event.user_id] = 4
-                elif self.step[event.user_id] == 4 and self.check_message(event.text) == True:
-                    if event.text == 'Назад':
-                        self.step[event.user_id] = 1
-                        self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
-                                [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
-                    else:
-                        self.step[event.user_id] = 5
-                        self.time_z = event.text
-                        self.text_about_table = 'Ваш столик на ' + str(self.person) + ' персоны назначен на ' + str(self.date_z) + ' ' + str(self.time_z)
-                        self.send_msg(event.user_id, 'Пожалуйста отправтье ваше имя и номер телефона, мы свяжемся с вами, чтобы подтвердить заказ', [['Ok']])
-                        test_list.Add_Order(self.user_table, event.user_id, 1, test_list.str_to_numb(self.date_z, self.time_z))
+                elif self.step[event.user_id] == 1 and self.check_message(event.text, event.user_id) == True:
+                   first_action(event, test_list, self)
+                elif self.step[event.user_id] == 2 and self.check_message(event.text, event.user_id) == True:
+                    second_action(event, test_list, self)
+                elif self.step[event.user_id] == 3 and self.check_message(event.text, event.user_id) == True:
+                    third_action(event, test_list, self)
+                elif self.step[event.user_id] == 4 and self.check_message(event.text, event.user_id) == True:
+                    four_action(event, test_list, self)
                 elif self.step[event.user_id] == 5:
-                    self.send_msg(event.user_id, 'Спасибо за заказ, мы скоро с вами свяжемся', [['Ok']])
-                    self.about_user = event.text
-                    
+                    fifth_action(event, test_list, self)
 
                     
 
