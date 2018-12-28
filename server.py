@@ -43,7 +43,16 @@ class Server:
     def start(self):
         test_list = add_table.table_list()
         for event in self.longpoll.listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 107687355:
+                    self.step[event.user_id] = 10 
+                    self.send_msg(event.user_id, 'Меню заказов', [['Список заявок'], ['Одобренные заявки']]) 
+                    if event.text == 'Список заявок' and self.check_message(event.text) == True:
+                        self.step[event.user_id] = 11 
+                        self.send_msg(event.user_id, 'Меню заказов', [['Назад'], [show_table(new_table_orders)]])
+                    elif event.text == 'Одобренные заявки' and self.check_message(event.text) == True:
+                        self.step[event.user_id] = 11 
+
+            elif event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id != 107687355:
                 if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])

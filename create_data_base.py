@@ -35,6 +35,7 @@ def add_new_record(name_table):
 def show_table(name_table):
     for i in cursor.execute("""select * from """ + name_table):
         print(i)
+
 def data_base_commit():
     conn.commit()
 def free_table():
