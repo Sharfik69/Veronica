@@ -36,6 +36,10 @@ def show_table(name_table):
     for i in cursor.execute("""select * from """ + name_table):
         print(i)
 
+def show_table1(name_table):
+    for i in cursor.execute("""select table_number from """ + name_table + """ where state = 1"""):
+        return i 
+
 def data_base_commit():
     conn.commit()
 def free_table():
@@ -56,7 +60,7 @@ def add_new_order(name_table):
 
 
 
-while True:
+'''while True:
     #conn = sqlite3.connect("test_data_base.db")
     #cursor = conn.cursor()
     #cursor.execute("""update new_table set type = 1 where type = 3 and person = 5""")
@@ -97,3 +101,4 @@ while True:
     if what_to_do == 9:
         break
 
+'''
