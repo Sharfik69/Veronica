@@ -13,6 +13,7 @@ from create_key_board import new_key_board
 from vk_api import VkUpload
 from collections import defaultdict
 from vk_api.longpoll import VkLongPoll, VkEventType
+from list_of_ordered_tables import but
 class Server:
     def __init__(self, api_token, server_name: str = "Empty"):
         self.server_name = server_name
@@ -44,20 +45,21 @@ class Server:
     def start(self):
         test_list = add_table.table_list()
         for event in self.longpoll.listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 107687355:
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 132125712:
                 if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']]) 
                     self.step[event.user_id] = 1
-                if event.text == 'Поступившие заявки' and self.check_message(event.text) == True:
-                    self.send_msg(event.user_id, 'Этап 2', [['Назад'], [show_table1(new_table_orders)]])
-                elif event.text == 'Одобренные заявки' and self.check_message(event.text) == True:
-                    self.send_msg(event.user_id, 'Этап 2', [['Назад'], [show_table1(new_table_orders)]])
-                elif event.text == 'Назад' and self.check_message(event.text) == True:
-                    self.step[event.user_id] = 0
-                    self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']])
+                elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
+                    if event.text == 'Поступившие заявки':
+                        self.send_msg(event.user_id, 'Этап 2',but())
+                    elif event.text == 'Одобренные заявки':
+                        self.send_msg(event.user_id, 'Этап 2',but())
+                    elif event.text == 'Назад':
+                        self.step[event.user_id] = 1
+                        self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']])
                 #elif event.text == id_столика:
 
-            elif event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id != 107687355:
+            elif event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id != 132125712:
                 if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
