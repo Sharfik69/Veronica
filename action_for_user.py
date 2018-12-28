@@ -9,10 +9,12 @@ from list_of_ordered_tables import but
 
 def first_action(event, test_list, server1):
     def print_type_table(result):
+        s = str()
         for i in result:
                 for j in i:
                     if j != 'Назад':
-                        server1.send_msg(event.user_id, test_list.print_about_table(int(j)), [['Одну минуту']])
+                        s += test_list.print_about_table(int(j)) + '\n\n'
+        server1.send_msg(event.user_id, s, [['Одну минуту']])
 
     if event.text == 'Назад':
         server1.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
