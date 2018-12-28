@@ -42,24 +42,27 @@ class Server:
                 if j == event_text:
                     return True
         return False
+    def start_for_manager(self, event):
+        if self.step[event.user_id] == 0:
+                    self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']]) 
+                    self.step[event.user_id] = 1
+        elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
+            if event.text == 'Поступившие заявки':
+                self.send_msg(event.user_id, 'Этап 2',but())
+            elif event.text == 'Одобренные заявки':
+                self.send_msg(event.user_id, 'Этап 2',but())
+            elif event.text == 'Назад':
+                self.step[event.user_id] = 1
+                self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']])
+                #elif event.text == id_столика:
+
+
     def start(self):
         test_list = add_table.table_list()
         for event in self.longpoll.listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 132125712:
-                if self.step[event.user_id] == 0:
-                    self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']]) 
-                    self.step[event.user_id] = 1
-                elif self.step[event.user_id] == 1 and self.check_message(event.text) == True:
-                    if event.text == 'Поступившие заявки':
-                        self.send_msg(event.user_id, 'Этап 2',but())
-                    elif event.text == 'Одобренные заявки':
-                        self.send_msg(event.user_id, 'Этап 2',but())
-                    elif event.text == 'Назад':
-                        self.step[event.user_id] = 1
-                        self.send_msg(event.user_id, 'Этап 1', [['Поступившие заявки'], ['Одобренные заявки']])
-                #elif event.text == id_столика:
-
-            elif event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id != 132125712:
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.user_id == 340883758:
+                self.start_for_manager(event)
+            elif event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 if self.step[event.user_id] == 0:
                     self.send_msg(event.user_id, 'Добро пожаловать, выбери на сколько человек', 
                                 [['Столик на двоих'], ['Столик на троих'], ['Столик на четверых'], ['Столик на большую компанию']])
