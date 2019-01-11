@@ -93,4 +93,4 @@ class Server:
 
 
     def test(self):
-        self.send_msg(340883758, "Ку пацаны", [['Сосать']])
+        self.send_msg(340883758, "Ку пацаны", [['Привет']])
